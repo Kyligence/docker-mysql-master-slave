@@ -1,0 +1,22 @@
+global
+
+defaults
+    mode http
+    log global
+    retries 2
+    timeout connect 3000ms
+    timeout server 5000ms
+    timeout client 5000ms
+listen stats
+    bind :9999
+    stats enable
+    stats hide-version
+    stats uri /stats
+    stats auth statadmin:statadminpass
+listen mysql-cluster
+    bind :4407
+    mode tcp
+    option mysql-check user haproxy
+    balance roundrobin
+    server mysql-1 127.0.0.1:4406 check
+    server mysql-2 127.0.0.1:5506 check
